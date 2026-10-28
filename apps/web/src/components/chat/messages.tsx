@@ -1,10 +1,10 @@
 "use client";
 
 import type { ChatAction, MessageCard, MessageDTO, QuestionOption, TicketDTO, TraceStep } from "@nexo/shared";
-import { ChevronDown, Headset, Loader2, RefreshCw } from "lucide-react";
+import { Headset, Info, Loader2, RefreshCw } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { DecisionPanel, StepChips, StepIcon } from "./decision-panel";
+import { DecisionPanel, StepIcon } from "./decision-panel";
 import { DraftCard, QuestionOptions, QuickActions, TicketCard, TicketSelector } from "./cards";
 import { hhmm } from "@/lib/format";
 
@@ -82,7 +82,7 @@ export function PendingAgentMessage({ steps, text }: { steps: TraceStep[]; text:
     <div className="flex flex-col gap-1.5">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <span className="text-[12.5px] font-semibold text-ink">Nexo Assist</span>
-        {text ? <StepChips steps={steps} /> : <LiveStep steps={steps} />}
+        {!text && <LiveStep steps={steps} />}
       </div>
       <div className="max-w-[600px] whitespace-pre-wrap break-words rounded-[4px_12px_12px_12px] border border-rule bg-paper px-4 py-3 text-[14.5px] leading-normal text-ink">
         {text || <Dots />}
@@ -118,16 +118,16 @@ export function AgentMessage({
     <div className="flex flex-col gap-1.5">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <span className="text-[12.5px] font-semibold text-ink">{message.authorName ?? "Nexo Assist"}</span>
-        <StepChips steps={message.steps} canExpand={canExpand} expanded={open} onToggle={() => setOpen((o) => !o)} />
         {canExpand && (
           <button
             type="button"
             onClick={() => setOpen((o) => !o)}
             aria-expanded={open}
-            className="flex items-center gap-0.5 rounded-md text-[12.5px] text-primary-text hover:underline"
+            aria-label={open ? "Ocultar detalhes" : "Ver detalhes"}
+            title={open ? "Ocultar detalhes" : "Ver detalhes"}
+            className={cn("flex size-6 items-center justify-center rounded-full text-ink-3 hover:bg-desk hover:text-primary-text", open && "bg-primary-soft text-primary-text")}
           >
-            {open ? "Ocultar detalhes" : "Ver detalhes"}
-            <ChevronDown className={cn("size-3.5 transition-transform", open && "rotate-180")} />
+            <Info className="size-4" />
           </button>
         )}
       </div>

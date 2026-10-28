@@ -1,0 +1,160 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* Tokens do protótipo (nexo.pen) mapeados para as variáveis do shadcn. Sem modo escuro: o protótipo não tem. */
+:root {
+  --paper: #ffffff;
+  --desk: #f6f7f9;
+  --ink: #1b2431;
+  --ink-2: #3d4656;
+  --ink-3: #5b6472;
+  --rule: #e6e8ec;
+  --cta: #0062c4;
+  --cta-hover: #0057ad;
+  --primary-soft: #0285f712;
+  --primary-text: #0069c7;
+  --success: #00bd6c;
+  --success-soft: #00bd6c14;
+  --success-text: #00804a;
+  --warning: #f5a500;
+  --warning-soft: #f5a50018;
+  --warning-text: #946300;
+  --danger: #ee343b;
+  --danger-soft: #ee343b12;
+  --danger-text: #c4161d;
+  --violet-soft: #a37aff16;
+  --violet-text: #6b3fe0;
+  --blue: #0285f7;
+  --thread: #eef1f5;
+  --client-bubble: #e6effa;
+
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--paper);
+  --card-foreground: var(--ink);
+  --popover: var(--paper);
+  --popover-foreground: var(--ink);
+  --primary: var(--cta);
+  --primary-foreground: #ffffff;
+  --secondary: var(--desk);
+  --secondary-foreground: var(--ink);
+  --muted: var(--desk);
+  --muted-foreground: var(--ink-3);
+  --accent: var(--desk);
+  --accent-foreground: var(--ink);
+  --destructive: var(--danger-text);
+  --border: var(--rule);
+  --input: #1b24311f;
+  --ring: var(--cta);
+  --radius: 0.5rem;
+  --sidebar: var(--paper);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--cta);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--primary-soft);
+  --sidebar-accent-foreground: var(--primary-text);
+  --sidebar-border: var(--rule);
+  --sidebar-ring: var(--cta);
+}
+
+@theme inline {
+  --font-sans: var(--font-ui), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display), Georgia, serif;
+  --font-heading: var(--font-ui), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-paper: var(--paper);
+  --color-desk: var(--desk);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-rule: var(--rule);
+  --color-cta: var(--cta);
+  --color-cta-hover: var(--cta-hover);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-text: var(--primary-text);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-success-text: var(--success-text);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-warning-text: var(--warning-text);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-danger-text: var(--danger-text);
+  --color-violet-soft: var(--violet-soft);
+  --color-violet-text: var(--violet-text);
+  --color-blue: var(--blue);
+  --color-thread: var(--thread);
+  --color-client-bubble: var(--client-bubble);
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  --shadow-card: 0 1px 2px #1b24310d, 0 6px 20px #1b24310a;
+  --shadow-input: 0 1px 2px #1b24310d;
+  --shadow-bubble: 0 1px 2px #1b243112;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html,
+  body {
+    height: 100%;
+  }
+  body {
+    @apply bg-background font-sans text-ink antialiased;
+  }
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+}
+
+@keyframes nexo-dot {
+  0%,
+  80%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+.nexo-dot {
+  animation: nexo-dot 1.1s infinite ease-in-out;
+}

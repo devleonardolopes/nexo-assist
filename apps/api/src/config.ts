@@ -3,10 +3,10 @@ import { resolve } from "node:path";
 
 /** Carrega o .env da raiz do monorepo (ou da pasta atual) sem sobrescrever variáveis já definidas. */
 function loadDotEnv() {
-  const candidates = [".env", "../../.env", "../.env"].map((p) => resolve(process.cwd(), p));
+  const candidates = [".env", "../../.env", "../.env"].map((p) => resolve(/*turbopackIgnore: true*/ process.cwd(), p));
   for (const file of candidates) {
-    if (!existsSync(file)) continue;
-    for (const line of readFileSync(file, "utf8").split("\n")) {
+    if (!existsSync(/*turbopackIgnore: true*/ file)) continue;
+    for (const line of readFileSync(/*turbopackIgnore: true*/ file, "utf8").split("\n")) {
       const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/);
       if (!m) continue;
       const [, key, raw] = m;

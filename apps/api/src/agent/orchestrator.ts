@@ -294,7 +294,7 @@ class Run {
     let myTickets: TicketDTO[] | null = null;
     try {
       myTickets = await legacy(() => tickets.listForUser(this.user.id));
-      this.step("list_tickets", "consultou seus chamados", true, `${myTickets.filter(isActive).length} abertos, ${myTickets.length} no total`);
+      this.step("list_tickets", "consultou seus chamados", true, `${myTickets.filter(isActive).length} em aberto, ${myTickets.length} no total`);
     } catch (err) {
       if (!(err instanceof TicketServiceUnavailable)) throw err;
       this.step("list_tickets", "sistema de chamados indisponível", false, "3 tentativas sem sucesso");

@@ -2,7 +2,7 @@ import type { StreamEvent } from "@nexo/shared";
 import type { Decider } from "../src/agent/decider";
 import type { Decision } from "../src/agent/schema";
 import { createContainer } from "../src/container";
-import { createDb } from "../src/db/client";
+import { createDb, schema } from "../src/db/client";
 import { setNow } from "../src/lib/clock";
 
 export const dec = (o: Partial<Decision> = {}): Decision => ({
@@ -57,12 +57,22 @@ export async function setup(script: Decision[] = [], opts: { failureRate?: numbe
   const decider = new ScriptedDecider(script);
   const c = createContainer({ db, decider, failureRate: opts.failureRate ?? 0 });
   await c.ready;
-  // O seed deixa a conversa da Ana transferida (como no protótipo do console). Os testes do agent
-  // precisam dela com o agent; os do console mantêm o estado original.
-  if (!opts.keepSeedTransfers) {
-    for (const id of ["conv_ana", "conv_carla", "conv_bruno"]) {
-      await c.convos.update(id, { status: "agent", transferReason: null, transferSummary: null, transferredAt: null });
-    }
+  const stamp = new Date().toISOString();
+  const fourDaysAgo = new Date(Date.now() - 4 * 24 * 3600_000).toISOString();
+  // Fixtures extras só dos testes: outra funcionária (isolamento) e outra analista (conflito de assunção).
+  await db.insert(schema.users).values([
+    { id: "usr_carla", name: "Carla Mendes", email: "carla.mendes@nexo.com.br", role: "employee", department: "Comercial", os: "Windows 11", color: "#9A4A12" },
+    { id: "usr_marina", name: "Marina Alves", email: "marina.alves@nexo.com.br", role: "analyst", department: "Service desk", level: "N1", color: "#1E7A4C" },
+  ]);
+  await db.insert(schema.tickets).values({
+    id: "INC-20150", requesterId: "usr_carla", type: "INC", title: "Senha do SAP bloqueada", description: "Senha do SAP bloqueada após várias tentativas.",
+    category: "Acesso", subcategory: null, priority: "medium", status: "resolved", affected: "self", assigneeId: null,
+    createdAt: fourDaysAgo, updatedAt: fourDaysAgo, resolvedAt: fourDaysAgo,
+  });
+  await db.insert(schema.conversations).values({ id: "conv_carla", userId: "usr_carla", status: "agent", createdAt: stamp, updatedAt: stamp });
+  if (opts.keepSeedTransfers) {
+    await c.convos.update("conv_carla", { status: "waiting_analyst", transferReason: "user_request", transferSummary: "Carla precisa de acesso ao SAP.", transferredAt: stamp });
+    await c.convos.update("conv_ana", { status: "waiting_analyst", transferReason: "overdue", transferSummary: "INC-20311 vencido.", transferredAt: stamp, relatedTicketId: "INC-20311" });
   }
   return { c, decider };
 }

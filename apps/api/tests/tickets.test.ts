@@ -37,7 +37,7 @@ describe("serviço de chamados", () => {
   test("cria chamado com numeração sequencial por tipo", async () => {
     const { c } = await setup();
     const t = await c.tickets.create("usr_ana", { type: "INC", title: "x", description: "y", category: "Outros", priority: "low", affected: "self" });
-    expect(t.id).toBe("INC-20520");
+    expect(t.id).toBe("INC-20501");
     expect(t.status).toBe("open");
   });
 });

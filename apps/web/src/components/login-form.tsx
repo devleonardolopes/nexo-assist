@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Check, Eye, EyeOff, Loader2, LockKeyhole, Mail } from "lucide-react";
+import { ArrowRight, Check, Eye, EyeOff, Headset, Loader2, LockKeyhole, Mail, UserRound } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -19,12 +19,12 @@ export function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent, as?: string) {
     e.preventDefault();
     setError(null);
     setLoading(true);
     try {
-      const { user } = await api.login(email, password);
+      const { user } = await api.login(as ?? email, password);
       router.replace(user.role === "analyst" ? "/atendente" : "/chat");
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Não foi possível entrar agora. Tente novamente.");
@@ -33,6 +33,7 @@ export function LoginForm() {
   }
 
   return (
+    <div className="flex flex-col gap-7">
     <form onSubmit={onSubmit} className="flex flex-col gap-7" noValidate>
       <div className="flex flex-col gap-[18px]">
         <div className="flex flex-col gap-2">
@@ -115,5 +116,30 @@ export function LoginForm() {
         )}
       </Button>
     </form>
+
+    <div className="rounded-xl border border-dashed border-rule bg-desk/60 p-3.5">
+      <p className="mb-2.5 text-[12.5px] font-semibold uppercase tracking-wide text-ink-3">Acesso rápido para teste</p>
+      <div className="grid gap-2 sm:grid-cols-2">
+        {[
+          { email: "ana.souza@nexo.com.br", name: "Ana Souza", role: "Funcionária · chat com o agent", Icon: UserRound },
+          { email: "rafael.lima@nexo.com.br", name: "Rafael Lima", role: "Analista N2 · console", Icon: Headset },
+        ].map(({ email: e, name, role, Icon }) => (
+          <button
+            key={e}
+            type="button"
+            disabled={loading}
+            onClick={(ev) => { setEmail(e); void onSubmit(ev, e); }}
+            className="flex items-center gap-2.5 rounded-lg border border-rule bg-paper px-3 py-2.5 text-left hover:border-cta disabled:opacity-60"
+          >
+            <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary-soft text-primary-text"><Icon className="size-4" /></span>
+            <span className="min-w-0">
+              <span className="block truncate text-[14px] font-semibold text-ink">{name}</span>
+              <span className="block truncate text-[12.5px] text-ink-3">{role}</span>
+            </span>
+          </button>
+        ))}
+      </div>
+    </div>
+    </div>
   );
 }

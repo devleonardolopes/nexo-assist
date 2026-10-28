@@ -29,13 +29,10 @@ Qualquer senha é aceita (como pede o PRD). O papel vem do usuário no banco.
 
 | E-mail | Papel | Estado inicial |
 | --- | --- | --- |
-| `ana.souza@nexo.com.br` | funcionária | conversa **já transferida** (igual ao protótipo do console), chamado INC-20311 vencido |
-| `carla.mendes@nexo.com.br`, `bruno.tavares@nexo.com.br` | funcionários | transferidas (Bruno por baixa confiança, 41%) |
-| `diego.ramos@nexo.com.br`, `elisa.prado@nexo.com.br` | funcionários | conversa em andamento com o agent |
-| `fabio.nunes@nexo.com.br`, `gabriela.rocha@nexo.com.br` | funcionários | conversa anterior resolvida: começam do zero |
-| `rafael.lima@nexo.com.br` (N2), `marina.alves@nexo.com.br` (N1) | analistas | console em `/atendente` |
+| `ana.souza@nexo.com.br` | funcionária | conversa nova com o agent; 5 chamados (INC-20311 vencido, INC-20298 em andamento…) |
+| `rafael.lima@nexo.com.br` | analista (N2) | console em `/atendente`; só vê casos depois que a Ana é transferida |
 
-Para testar o agent com a Ana, entre como Rafael, abra a conversa dela e use **Devolver ao agent**.
+A tela de login tem dois botões de **acesso rápido para teste**. Fluxo sugerido: entre como Ana, peça "quero falar com um analista"; depois entre como Rafael, assuma a conversa e responda.
 
 ## Arquitetura
 

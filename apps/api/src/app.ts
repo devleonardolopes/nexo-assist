@@ -130,6 +130,13 @@ export function createApp(c: Container) {
       const a = requireUser(auth, set, "employee");
       return a ? chatState(a.user.id, a.session.id) : { error: "forbidden" };
     })
+    .post("/chat/new", async ({ auth, set }) => {
+      const a = requireUser(auth, set, "employee");
+      if (!a) return { error: "forbidden" };
+      const active = await c.convos.getOrCreateActive(a.user.id);
+      await c.convos.update(active.id, { status: "resolved", updatedAt: now().toISOString() });
+      return chatState(a.user.id, a.session.id);
+    })
     .post(
       "/chat/messages",
       async ({ auth, set, body, request }) => {

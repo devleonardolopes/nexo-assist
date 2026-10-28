@@ -1,7 +1,7 @@
 "use client";
 
 import type { ChatAction, ChatState, ConversationStatus, MessageDTO, SessionUser, StreamEvent, TraceStep } from "@nexo/shared";
-import { ArrowUp, Loader2 } from "lucide-react";
+import { ArrowUp, Loader2, Plus } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -62,6 +62,24 @@ export function ChatView({ user, onStatus }: { user: SessionUser | null; onStatu
     }
   }, [onStatus]);
   const chatRef = useRef<ChatState | null>(null);
+
+  async function startNew() {
+    if (sending) return;
+    try {
+      const s = await api.newChat();
+      convId.current = s.conversation.id;
+      chatRef.current = s;
+      setCarried([]);
+      setOptimistic(null);
+      setPending(null);
+      setChat(s);
+      setUsed(s.messagesUsed);
+      setStatus(s.conversation.status);
+      onStatus(s.conversation.status, s.conversation.analystName);
+    } catch (e) {
+      setLoadError(e instanceof ApiError ? e.message : "Não foi possível iniciar um novo atendimento.");
+    }
+  }
 
   useEffect(() => {
     void load();
@@ -233,6 +251,16 @@ export function ChatView({ user, onStatus }: { user: SessionUser | null; onStatu
       </div>
 
       <div className="mx-auto w-full max-w-[860px] shrink-0 px-4 pb-[18px] pt-2.5 sm:px-8">
+        <div className="mb-2 flex justify-end">
+          <button
+            type="button"
+            onClick={() => void startNew()}
+            disabled={sending}
+            className="flex items-center gap-1.5 rounded-lg border border-rule bg-paper px-3 py-1.5 text-[13px] font-semibold text-ink-2 hover:bg-desk disabled:opacity-50"
+          >
+            <Plus className="size-3.5" /> Novo atendimento
+          </button>
+        </div>
         {!inAgentMode && (
           <p className="mb-2 rounded-lg border border-warning/40 bg-warning-soft px-3.5 py-2.5 text-[14px] font-medium text-warning-text">
             {status === "waiting_analyst"

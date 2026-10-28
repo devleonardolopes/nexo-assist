@@ -45,6 +45,7 @@ export const api = {
   resetPassword: () => post<{ ok: true; sentTo: string }>("/me/password-reset"),
 
   chat: () => request<ChatState>("/chat"),
+  newChat: () => post<ChatState>("/chat/new"),
   confirmDraft: (id: string) => post<{ events: StreamEvent[] }>(`/chat/drafts/${id}/confirm`),
   cancelDraft: (id: string) => post<{ events: StreamEvent[] }>(`/chat/drafts/${id}/cancel`),
 

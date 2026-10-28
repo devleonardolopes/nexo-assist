@@ -234,9 +234,9 @@ export function ChatView({ user, onStatus }: { user: SessionUser | null; onStatu
 
       <div className="mx-auto w-full max-w-[860px] shrink-0 px-4 pb-[18px] pt-2.5 sm:px-8">
         {!inAgentMode && (
-          <p className="mb-2 rounded-lg bg-warning-soft px-3 py-2 text-[13px] text-warning-text">
+          <p className="mb-2 rounded-lg border border-warning/40 bg-warning-soft px-3.5 py-2.5 text-[14px] font-medium text-warning-text">
             {status === "waiting_analyst"
-              ? "Seu caso foi encaminhado. O assistente fica em silêncio até um analista atender; você pode continuar escrevendo."
+              ? "Seu caso foi encaminhado a um analista. O assistente não responde enquanto isso; suas mensagens ficam registradas para o analista."
               : "Você está conversando com um analista. O assistente está pausado."}
           </p>
         )}
@@ -253,7 +253,7 @@ export function ChatView({ user, onStatus }: { user: SessionUser | null; onStatu
             onChange={(e) => setInput(e.target.value)}
             disabled={limitReached}
             maxLength={2000}
-            placeholder={limitReached ? `Limite de ${limit} mensagens da sessão atingido` : "Escreva para o Nexo…"}
+            placeholder={limitReached ? `Limite de ${limit} mensagens da sessão atingido` : status === "waiting_analyst" ? "Aguardando um analista… você pode deixar mais detalhes" : "Escreva para o Nexo…"}
             aria-label="Mensagem para o Nexo"
             className="min-w-0 flex-1 bg-transparent text-[14.5px] text-ink outline-none placeholder:text-ink-3 disabled:cursor-not-allowed"
           />

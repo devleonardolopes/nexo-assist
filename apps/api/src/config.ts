@@ -19,8 +19,18 @@ loadDotEnv();
 
 const onVercel = Boolean(process.env.VERCEL);
 
+/** Raiz do monorepo (pasta que contém apps/api), para o banco local ser o mesmo rode a API sozinha ou dentro do Next. */
+function repoRoot(): string {
+  let dir = /*turbopackIgnore: true*/ process.cwd();
+  for (let i = 0; i < 5; i++) {
+    if (existsSync(/*turbopackIgnore: true*/ resolve(dir, "apps/api/drizzle/meta/_journal.json"))) return dir;
+    dir = resolve(dir, "..");
+  }
+  return process.cwd();
+}
+
 export const config = {
-  databaseUrl: process.env.DATABASE_URL ?? (onVercel ? "file:/tmp/nexo.db" : "file:./data/nexo.db"),
+  databaseUrl: process.env.DATABASE_URL ?? (onVercel ? "file:/tmp/nexo.db" : `file:${resolve(repoRoot(), "apps/api/data/nexo.db")}`),
   databaseAuthToken: process.env.DATABASE_AUTH_TOKEN,
   deepseekApiKey: process.env.DEEPSEEK_API_KEY,
   /** Modelo usado pelo agent (id do provedor DeepSeek). */

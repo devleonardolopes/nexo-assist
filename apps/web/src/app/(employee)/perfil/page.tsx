@@ -67,9 +67,9 @@ export default function ProfilePage() {
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-[14.5px] font-semibold text-ink">Senha</p>
-                <p className="text-[13.5px] text-ink-3">
+                <div className="text-[13.5px] text-ink-3">
                   {days === undefined ? <Skeleton className="mt-1 h-4 w-32" /> : days === null ? "Data da última alteração indisponível" : `Alterada há ${days} dias`}
-                </p>
+                </div>
               </div>
               <button
                 onClick={reset}

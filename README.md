@@ -12,7 +12,7 @@ cp .env.example .env        # preencha DEEPSEEK_API_KEY
 bun run dev:web             # http://localhost:3000 (migra e popula o banco sozinho)
 ```
 
-O banco SQLite fica em `apps/api/data/nexo.db` (criado na primeira requisição). Comandos úteis:
+O banco SQLite fica em `apps/api/data/nexo.db` (criado na primeira requisição). Para zerar os dados, apague esse arquivo. Comandos úteis:
 
 | Comando | O que faz |
 | --- | --- |
@@ -86,7 +86,9 @@ Acima de cada resposta aparecem os passos ("consultou seus chamados", "classific
 
 ## Deploy (Vercel)
 
-O Elysia roda dentro do Next (`apps/web/src/app/api/[[...slugs]]/route.ts`), então é um único projeto, sem CORS. Variáveis: `DEEPSEEK_API_KEY` (somente na Vercel, nunca no código) e, para persistir dados, `DATABASE_URL`/`DATABASE_AUTH_TOKEN` de um libSQL (por exemplo Turso). Sem elas o app usa um SQLite em `/tmp`, recriado a cada cold start (serve para demonstração, mas não persiste).
+O Elysia roda dentro do Next (`apps/web/src/app/api/[[...slugs]]/route.ts`), então é um único projeto, sem CORS. Basta importar o repositório na Vercel (Root Directory: `apps/web`) e definir `DEEPSEEK_API_KEY` nas variáveis de ambiente (somente lá, nunca no código).
+
+O banco é um SQLite em `/tmp`, recriado e populado com os dados de exemplo a cada deploy ou cold start. Para esta demonstração isso é intencional: os dados não persistem entre deploys. Se um dia precisar persistir, basta apontar `DATABASE_URL` (e `DATABASE_AUTH_TOKEN`) para um libSQL remoto; o código é o mesmo.
 
 ## O que faria com mais tempo
 

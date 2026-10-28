@@ -1,10 +1,10 @@
 "use client";
 
 import type { ChatAction, MessageCard, MessageDTO, QuestionOption, TicketDTO, TraceStep } from "@nexo/shared";
-import { ChevronDown, Headset, RefreshCw } from "lucide-react";
+import { ChevronDown, Headset, Loader2, RefreshCw } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { DecisionPanel, StepChips } from "./decision-panel";
+import { DecisionPanel, StepChips, StepIcon } from "./decision-panel";
 import { DraftCard, QuestionOptions, QuickActions, TicketCard, TicketSelector } from "./cards";
 import { hhmm } from "@/lib/format";
 
@@ -64,13 +64,25 @@ function Dots() {
   );
 }
 
+/** Card único que troca de texto a cada passo que o agent conclui, enquanto ele ainda trabalha. */
+function LiveStep({ steps }: { steps: TraceStep[] }) {
+  const last = steps[steps.length - 1];
+  return (
+    <span key={steps.length} className="nexo-fade flex items-center gap-1.5 rounded-lg border border-rule bg-paper px-2.5 py-1 text-[12.5px] text-ink-2" role="status">
+      {last ? <StepIcon step={last} className="size-3.5 shrink-0 text-primary-text" /> : <Loader2 className="size-3.5 shrink-0 animate-spin text-primary-text" />}
+      {last ? last.label : "pensando…"}
+      {last && <Loader2 className="size-3 animate-spin text-ink-3" />}
+    </span>
+  );
+}
+
 /** Resposta do agent em andamento: passos que chegam em tempo real e, depois, o texto em streaming. */
 export function PendingAgentMessage({ steps, text }: { steps: TraceStep[]; text: string }) {
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <span className="text-[12.5px] font-semibold text-ink">Nexo Assist</span>
-        <StepChips steps={steps} />
+        {text ? <StepChips steps={steps} /> : <LiveStep steps={steps} />}
       </div>
       <div className="max-w-[600px] whitespace-pre-wrap break-words rounded-[4px_12px_12px_12px] border border-rule bg-paper px-4 py-3 text-[14.5px] leading-normal text-ink">
         {text || <Dots />}

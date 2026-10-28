@@ -1,11 +1,47 @@
 "use client";
 
 import type { DecisionDetail, TraceStep } from "@nexo/shared";
-import { AlertCircle, Brain, Check, Cog } from "lucide-react";
+import {
+  AlertCircle,
+  ArrowRightLeft,
+  BookOpen,
+  Brain,
+  ClipboardList,
+  Cog,
+  Copy,
+  FilePen,
+  FilePlus2,
+  Gauge,
+  Search,
+  Ticket,
+  Timer,
+  type LucideIcon,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const confidenceTone = (c: number) =>
   c >= 0.8 ? { label: "alta", bar: "bg-success", text: "text-success-text" } : c >= 0.6 ? { label: "média", bar: "bg-warning", text: "text-warning-text" } : { label: "baixa", bar: "bg-danger", text: "text-danger-text" };
+
+const TOOL_ICON: Record<string, LucideIcon> = {
+  list_tickets: ClipboardList,
+  get_ticket: Ticket,
+  search_kb: BookOpen,
+  check_duplicates: Copy,
+  classify_priority: Gauge,
+  get_sla: Timer,
+  build_draft: FilePen,
+  create_ticket: FilePlus2,
+  update_ticket: FilePen,
+  reopen_ticket: FilePen,
+  transfer: ArrowRightLeft,
+  decide: Brain,
+};
+
+/** Ícone da ferramenta usada (ou alerta, se falhou). */
+export function StepIcon({ step, className }: { step: TraceStep; className?: string }) {
+  const Icon = step.ok ? (TOOL_ICON[step.tool] ?? Search) : AlertCircle;
+  return <Icon className={className ?? "size-3.5"} />;
+}
 
 /** Chips de ações do agent (acima da resposta), como no protótipo; clicáveis para abrir o detalhe. */
 export function StepChips({ steps, onToggle, expanded, canExpand }: { steps: TraceStep[]; onToggle?: () => void; expanded?: boolean; canExpand?: boolean }) {
@@ -19,11 +55,11 @@ export function StepChips({ steps, onToggle, expanded, canExpand }: { steps: Tra
           disabled={!canExpand}
           aria-expanded={canExpand ? expanded : undefined}
           className={cn(
-            "flex items-center gap-[5px] rounded-md text-[12.5px] text-ink-3 enabled:hover:text-ink",
-            !s.ok && "text-danger-text enabled:hover:text-danger-text",
+            "flex items-center gap-1.5 rounded-lg border border-rule bg-paper px-2.5 py-1 text-[12.5px] text-ink-2 enabled:hover:border-ink-3 enabled:hover:text-ink",
+            !s.ok && "border-danger/30 bg-danger-soft text-danger-text enabled:hover:text-danger-text",
           )}
         >
-          {s.ok ? <Check className="size-3" strokeWidth={2.5} /> : <AlertCircle className="size-3" />}
+          <StepIcon step={s} className="size-3.5 shrink-0" />
           {s.label}
         </button>
       ))}
@@ -68,7 +104,7 @@ export function DecisionPanel({ decision, steps }: { decision: DecisionDetail | 
         <ol className={cn("flex flex-col gap-1.5", decision && "mt-3 border-t border-rule pt-3")}>
           {steps.map((s, i) => (
             <li key={i} className="flex items-start gap-2">
-              {s.ok ? <Check className="mt-[3px] size-3 shrink-0 text-success-text" strokeWidth={2.5} /> : <AlertCircle className="mt-[3px] size-3 shrink-0 text-danger-text" />}
+              <StepIcon step={s} className={cn("mt-[2px] size-3.5 shrink-0", s.ok ? "text-primary-text" : "text-danger-text")} />
               <span>
                 <span className="text-ink">{s.label}</span>
                 {s.detail && <span className="text-ink-3"> · {s.detail}</span>}

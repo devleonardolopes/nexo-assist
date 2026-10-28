@@ -69,10 +69,17 @@ export class MastraDecider implements Decider {
         }
       }
       const decision = DecisionSchema.parse(await stream.object);
-      return { decision, latencyMs: Date.now() - started, model: config.model };
+      const latencyMs = Date.now() - started;
+      console.log(`[llm] ok model=${config.model} intent=${decision.intent} confidence=${decision.confidence} latency=${latencyMs}ms`);
+      return { decision, latencyMs, model: config.model };
     } catch (err) {
-      if (err instanceof LlmUnavailable) throw err;
-      throw new LlmUnavailable(err instanceof Error ? err.message : "Falha ao consultar o modelo");
+      if (err instanceof LlmUnavailable) {
+        console.error(`[llm] não configurado: ${err.message}`);
+        throw err;
+      }
+      const message = err instanceof Error ? err.message : "Falha ao consultar o modelo";
+      console.error(`[llm] falhou model=${config.model} após ${Date.now() - started}ms: ${message}`);
+      throw new LlmUnavailable(message);
     }
   }
 }

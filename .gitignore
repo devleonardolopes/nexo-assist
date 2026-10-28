@@ -8,3 +8,8 @@ dist
 .vercel
 .DS_Store
 *.tsbuildinfo
+
+# Banco SQLite local
+apps/api/data/
+*.db-shm
+*.db-wal

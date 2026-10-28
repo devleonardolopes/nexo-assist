@@ -53,6 +53,9 @@
     "packages/shared": {
       "name": "@nexo/shared",
       "version": "0.0.0",
+      "devDependencies": {
+        "typescript": "^7.0.2",
+      },
     },
   },
   "trustedDependencies": [
